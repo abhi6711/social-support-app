@@ -47,14 +47,14 @@ export default function Wizard() {
         <Route path="*" element={<Step1 onNext={goNext} />} />
       </Routes>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+      {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
         <Button disabled={activeStep === 0} onClick={goPrev} variant="outlined">
           {t('actions.back')}
         </Button>
         <Button disabled={activeStep === steps.length - 1} onClick={goNext} variant="contained">
           {t('actions.next')}
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

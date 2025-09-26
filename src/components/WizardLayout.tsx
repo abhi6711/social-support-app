@@ -7,8 +7,8 @@ export default function WizardLayout() {
   const { t } = useTranslation();
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppBar position="static" color="primary">
-        <Toolbar>
+      <AppBar position="static" color="primary" >
+        <Toolbar style={{marginRight: '50px'}}>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {t('appTitle')}
           </Typography>
