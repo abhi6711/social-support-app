@@ -10,8 +10,14 @@ import TranslateIcon from '@mui/icons-material/Translate';
 
 const theme = createTheme();
 
+/**
+ * Main application component with theme, routing, and language toggle functionality
+ */
 export default function App() {
   const { i18n, t } = useTranslation();
+  /**
+   * Toggle between English and Arabic languages with RTL support
+   */
   const toggleLang = () => {
     const next = i18n.language === 'en' ? 'ar' : 'en';
     i18n.changeLanguage(next);

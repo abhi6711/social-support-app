@@ -12,10 +12,14 @@ type Step3Values = {
   reasonForApplying: string;
 };
 
+/**
+ * Third step of the wizard collecting situation descriptions with AI-assisted writing capabilities
+ */
 export default function Step3({ onBack }: { onBack: () => void }) {
   const { data, update } = useFormData();
-  const { register, handleSubmit, setValue, getValues } = useForm<Step3Values>({
+  const { register, handleSubmit, setValue, getValues, formState: { errors } } = useForm<Step3Values>({
     defaultValues: data.situations,
+    mode: 'onBlur',
   });
   const [suggestion, setSuggestion] = useState<string>('');
   const [open, setOpen] = useState(false);
@@ -23,6 +27,9 @@ export default function Step3({ onBack }: { onBack: () => void }) {
   const [loadingField, setLoadingField] = useState<keyof Step3Values | null>(null);
   const [errorOpen, setErrorOpen] = useState(false);
 
+  /**
+   * Request AI assistance for the specified field with error handling and fallback to mock suggestions
+   */
   const requestHelp = async (field: keyof Step3Values) => {
     setLoadingField(field);
     try {
@@ -42,6 +49,9 @@ export default function Step3({ onBack }: { onBack: () => void }) {
     }
   };
 
+  /**
+   * Handle final form submission by updating global state and submitting the complete application
+   */
   const onSubmit = async (values: Step3Values) => {
     update({ situations: values });
     await submitApplication({ ...data, situations: values });
@@ -54,15 +64,90 @@ export default function Step3({ onBack }: { onBack: () => void }) {
       <Typography variant="h6" sx={{ mb: 2 }}>{t('step3.title')}</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField label={t('step3.financialSituation')} fullWidth multiline minRows={4} {...register('financialSituation')} />
+          <TextField 
+            label={t('step3.financialSituation')} 
+            fullWidth 
+            multiline 
+            minRows={4}
+            {...register('financialSituation', {
+              required: 'Financial situation description is required',
+              minLength: {
+                value: 20,
+                message: 'Please provide at least 20 characters describing your financial situation'
+              },
+              maxLength: {
+                value: 1000,
+                message: 'Description cannot exceed 1000 characters'
+              },
+              validate: {
+                noNumbers: (value) => {
+                  const hasNumbers = /\d/.test(value);
+                  if (hasNumbers) return 'Please describe in words rather than using numbers';
+                  return true;
+                }
+              }
+            })}
+            error={!!errors.financialSituation}
+            helperText={errors.financialSituation?.message}
+          />
           <Button onClick={() => requestHelp('financialSituation')} sx={{ mt: 1 }} disabled={loadingField==='financialSituation'}>{t('actions.help')}</Button>
         </Grid>
         <Grid item xs={12}>
-          <TextField label={t('step3.employmentCircumstances')} fullWidth multiline minRows={4} {...register('employmentCircumstances')} />
+          <TextField 
+            label={t('step3.employmentCircumstances')} 
+            fullWidth 
+            multiline 
+            minRows={4}
+            {...register('employmentCircumstances', {
+              required: 'Employment circumstances description is required',
+              minLength: {
+                value: 20,
+                message: 'Please provide at least 20 characters describing your employment circumstances'
+              },
+              maxLength: {
+                value: 1000,
+                message: 'Description cannot exceed 1000 characters'
+              },
+              validate: {
+                noNumbers: (value) => {
+                  const hasNumbers = /\d/.test(value);
+                  if (hasNumbers) return 'Please describe in words rather than using numbers';
+                  return true;
+                }
+              }
+            })}
+            error={!!errors.employmentCircumstances}
+            helperText={errors.employmentCircumstances?.message}
+          />
           <Button onClick={() => requestHelp('employmentCircumstances')} sx={{ mt: 1 }} disabled={loadingField==='employmentCircumstances'}>{t('actions.help')}</Button>
         </Grid>
         <Grid item xs={12}>
-          <TextField label={t('step3.reasonForApplying')} fullWidth multiline minRows={4} {...register('reasonForApplying')} />
+          <TextField 
+            label={t('step3.reasonForApplying')} 
+            fullWidth 
+            multiline 
+            minRows={4}
+            {...register('reasonForApplying', {
+              required: 'Reason for applying description is required',
+              minLength: {
+                value: 20,
+                message: 'Please provide at least 20 characters explaining your reason for applying'
+              },
+              maxLength: {
+                value: 1000,
+                message: 'Description cannot exceed 1000 characters'
+              },
+              validate: {
+                noNumbers: (value) => {
+                  const hasNumbers = /\d/.test(value);
+                  if (hasNumbers) return 'Please describe in words rather than using numbers';
+                  return true;
+                }
+              }
+            })}
+            error={!!errors.reasonForApplying}
+            helperText={errors.reasonForApplying?.message}
+          />
           <Button onClick={() => requestHelp('reasonForApplying')} sx={{ mt: 1 }} disabled={loadingField==='reasonForApplying'}>{t('actions.help')}</Button>
         </Grid>
       </Grid>

@@ -34,6 +34,9 @@ const STORAGE_KEY = 'ssa_application_data_v1';
 
 const FormContext = createContext<FormContextValue | undefined>(undefined);
 
+/**
+ * Provider component that manages global form state with LocalStorage persistence
+ */
 export function FormProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<ApplicationData>(() => {
     try {
@@ -61,6 +64,9 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
 }
 
+/**
+ * Hook to access and update global form data with automatic LocalStorage persistence
+ */
 export function useFormData() {
   const ctx = useContext(FormContext);
   if (!ctx) throw new Error('useFormData must be used within FormProvider');

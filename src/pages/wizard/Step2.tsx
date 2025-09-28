@@ -12,12 +12,19 @@ type Step2Values = {
   housingStatus: string;
 };
 
+/**
+ * Second step of the wizard collecting family and financial information with validation
+ */
 export default function Step2({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
   const { data, update } = useFormData();
   const { register, handleSubmit, formState: { errors } } = useForm<Step2Values>({
     defaultValues: data.family,
+    mode: 'onBlur',
   });
 
+  /**
+   * Handle form submission by updating global state and proceeding to next step
+   */
   const onSubmit = (values: Step2Values) => {
     update({ family: values });
     onNext();
@@ -29,19 +36,91 @@ export default function Step2({ onBack, onNext }: { onBack: () => void; onNext: 
       <Typography variant="h6" sx={{ mb: 2 }}>{t('step2.title')}</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <TextField label={t('step2.maritalStatus')} fullWidth {...register('maritalStatus', { required: 'Required' })} error={!!errors.maritalStatus} helperText={errors.maritalStatus?.message} />
+          <TextField 
+            label={t('step2.maritalStatus')} 
+            fullWidth 
+            {...register('maritalStatus', { 
+              required: 'Marital status is required',
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: 'Marital status should contain only letters and spaces'
+              }
+            })} 
+            error={!!errors.maritalStatus} 
+            helperText={errors.maritalStatus?.message} 
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField label={t('step2.dependents')} type="number" fullWidth {...register('dependents', { required: 'Required', min: { value: 0, message: 'Invalid' } })} error={!!errors.dependents} helperText={errors.dependents?.message} />
+          <TextField 
+            label={t('step2.dependents')} 
+            type="number" 
+            fullWidth 
+            {...register('dependents', { 
+              required: 'Number of dependents is required',
+              min: { 
+                value: 0, 
+                message: 'Dependents cannot be negative' 
+              },
+              max: {
+                value: 20,
+                message: 'Please enter a reasonable number of dependents'
+              },
+              valueAsNumber: true
+            })} 
+            error={!!errors.dependents} 
+            helperText={errors.dependents?.message} 
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField label={t('step2.employmentStatus')} fullWidth {...register('employmentStatus', { required: 'Required' })} error={!!errors.employmentStatus} helperText={errors.employmentStatus?.message} />
+          <TextField 
+            label={t('step2.employmentStatus')} 
+            fullWidth 
+            {...register('employmentStatus', { 
+              required: 'Employment status is required',
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: 'Employment status should contain only letters and spaces'
+              }
+            })} 
+            error={!!errors.employmentStatus} 
+            helperText={errors.employmentStatus?.message} 
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField label={t('step2.monthlyIncome')} type="number" fullWidth {...register('monthlyIncome', { required: 'Required', min: { value: 0, message: 'Invalid' } })} error={!!errors.monthlyIncome} helperText={errors.monthlyIncome?.message} />
+          <TextField 
+            label={t('step2.monthlyIncome')} 
+            type="number" 
+            fullWidth 
+            {...register('monthlyIncome', { 
+              required: 'Monthly income is required',
+              min: { 
+                value: 0, 
+                message: 'Income cannot be negative' 
+              },
+              max: {
+                value: 1000000,
+                message: 'Please enter a reasonable income amount'
+              },
+              valueAsNumber: true
+            })} 
+            error={!!errors.monthlyIncome} 
+            helperText={errors.monthlyIncome?.message} 
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField label={t('step2.housingStatus')} fullWidth {...register('housingStatus', { required: 'Required' })} error={!!errors.housingStatus} helperText={errors.housingStatus?.message} />
+          <TextField 
+            label={t('step2.housingStatus')} 
+            fullWidth 
+            {...register('housingStatus', { 
+              required: 'Housing status is required',
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: 'Housing status should contain only letters and spaces'
+              }
+            })} 
+            error={!!errors.housingStatus} 
+            helperText={errors.housingStatus?.message} 
+          />
         </Grid>
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>

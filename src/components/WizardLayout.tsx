@@ -3,6 +3,9 @@ import { Container, Box, AppBar, Toolbar, Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Layout wrapper component providing consistent header and container structure for the wizard
+ */
 export default function WizardLayout() {
   const { t } = useTranslation();
   return (

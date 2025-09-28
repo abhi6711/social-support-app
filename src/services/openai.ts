@@ -3,6 +3,9 @@ import axios from 'axios';
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = 'gpt-3.5-turbo';
 
+/**
+ * Get AI suggestion from OpenAI API with fallback to mock suggestions on failure
+ */
 export async function getSuggestion(prompt: string, signal?: AbortSignal): Promise<string> {
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
   console.log('OpenAI API Key configured:', !!apiKey);
@@ -40,6 +43,9 @@ export async function getSuggestion(prompt: string, signal?: AbortSignal): Promi
   }
 }
 
+/**
+ * Build contextual prompts for different form fields to generate appropriate AI suggestions
+ */
 export function buildPrompt(field: 'financialSituation' | 'employmentCircumstances' | 'reasonForApplying'): string {
   switch (field) {
     case 'financialSituation':
@@ -53,6 +59,9 @@ export function buildPrompt(field: 'financialSituation' | 'employmentCircumstanc
   }
 }
 
+/**
+ * Generate contextual mock suggestions with simulated API delay for development/testing
+ */
 function getMockSuggestion(prompt: string): Promise<string> {
   // Simulate API delay
   return new Promise<string>((resolve) => {

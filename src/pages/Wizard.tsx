@@ -6,6 +6,9 @@ import Step2 from './wizard/Step2';
 import Step3 from './wizard/Step3';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Main wizard component managing multi-step form navigation with progress indicator
+ */
 export default function Wizard() {
   const { t } = useTranslation();
   const steps = [
@@ -15,7 +18,10 @@ export default function Wizard() {
   ];
 
   const stepPaths = ['/apply/step-1', '/apply/step-2', '/apply/step-3'];
-  function getStepIndex(pathname: string): number {
+  /**
+ * Determine the current step index based on the URL pathname
+ */
+function getStepIndex(pathname: string): number {
   const index = stepPaths.findIndex((p) => pathname.startsWith(p));
   return index === -1 ? 0 : index;
   }
@@ -23,9 +29,15 @@ export default function Wizard() {
   const { pathname } = useLocation();
   const activeStep = getStepIndex(pathname);
 
+  /**
+   * Navigate to the previous step in the wizard
+   */
   const goPrev = () => {
     if (activeStep > 0) navigate(stepPaths[activeStep - 1]);
   };
+  /**
+   * Navigate to the next step in the wizard
+   */
   const goNext = () => {
     if (activeStep < stepPaths.length - 1) navigate(stepPaths[activeStep + 1]);
   };
