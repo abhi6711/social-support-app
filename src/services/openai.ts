@@ -5,9 +5,11 @@ const MODEL = 'gpt-3.5-turbo';
 
 export async function getSuggestion(prompt: string, signal?: AbortSignal): Promise<string> {
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+  console.log('OpenAI API Key configured:', !!apiKey);
+  
   if (!apiKey) {
-    // In development, return a mock suggestion for easier testing
-    return `Suggested text: ${prompt}`;
+    // Return contextual mock suggestions based on the prompt
+    return getMockSuggestion(prompt);
   }
 
   const response = await axios.post(OPENAI_URL, {
@@ -39,6 +41,23 @@ export function buildPrompt(field: 'financialSituation' | 'employmentCircumstanc
     default:
       return 'Help me write this description clearly.';
   }
+}
+
+function getMockSuggestion(prompt: string): string {
+  // Simulate API delay
+  return new Promise<string>((resolve) => {
+    setTimeout(() => {
+      if (prompt.includes('financial situation') || prompt.includes('financial')) {
+        resolve(`I am currently experiencing financial difficulties due to unexpected circumstances. My monthly expenses exceed my available income, making it challenging to meet basic needs such as housing, utilities, and food. I am seeking assistance to help bridge this gap and stabilize my financial situation.`);
+      } else if (prompt.includes('employment') || prompt.includes('job')) {
+        resolve(`I am currently unemployed and actively seeking employment opportunities. I have been applying to various positions but have not yet secured a job that matches my skills and experience. The job search process has been challenging due to the competitive market and my need for flexible arrangements.`);
+      } else if (prompt.includes('reason') || prompt.includes('applying')) {
+        resolve(`I am applying for financial assistance because I am facing temporary financial hardship that affects my ability to meet essential living expenses. This support would help me maintain stability while I work to improve my financial situation through employment or other means.`);
+      } else {
+        resolve(`This is a mock suggestion to help you get started. Please replace this with your actual description. The AI assistance feature requires an OpenAI API key to be configured in your .env file.`);
+      }
+    }, 1000); // 1 second delay to simulate API call
+  });
 }
 
 

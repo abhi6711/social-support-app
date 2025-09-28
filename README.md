@@ -23,12 +23,15 @@ npm install
 2. Initialize Tailwind (already configured):
 Tailwind is preconfigured via `tailwind.config.js`, `postcss.config.js`, and `src/index.css`. No action needed.
 
-3. Create an environment file for the OpenAI API key (optional in dev):
-Create `.env` at the project root:
-```bash
-REACT_APP_OPENAI_API_KEY=your_openai_api_key
-```
-If not set, the app returns mock suggestions for development convenience.
+3. Configure OpenAI API key (optional - app works with mock suggestions):
+   
+   **Option A: Use real OpenAI API**
+   - Get your API key from: https://platform.openai.com/api-keys
+   - Edit `.env` file and add: `REACT_APP_OPENAI_API_KEY=sk-your-actual-key-here`
+   
+   **Option B: Use mock suggestions (default)**
+   - Leave `.env` file as is (empty API key)
+   - App will show realistic mock suggestions for testing
 
 4. Run the app:
 ```bash
@@ -49,7 +52,8 @@ The app will open at `http://localhost:3000`.
 - Model: `gpt-3.5-turbo`
 - The service is implemented in `src/services/openai.ts`.
 - Prompts are tailored per field via `buildPrompt`.
-- Timeouts and errors are handled; fallback returns a mock suggestion when the API key is not configured.
+- **Mock Mode**: When no API key is configured, the app provides realistic mock suggestions with a 1-second delay to simulate API calls.
+- Timeouts and errors are handled gracefully.
 
 ## Project Structure
 - `src/pages/Wizard.tsx`: Wizard routing and progress
