@@ -6,28 +6,38 @@ const MODEL = 'gpt-3.5-turbo';
 export async function getSuggestion(prompt: string, signal?: AbortSignal): Promise<string> {
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
   console.log('OpenAI API Key configured:', !!apiKey);
+  console.log('API Key value:', apiKey ? `${apiKey.substring(0, 8)}...` : 'Not set');
   
   if (!apiKey) {
     // Return contextual mock suggestions based on the prompt
     return getMockSuggestion(prompt);
   }
 
-  const response = await axios.post(OPENAI_URL, {
-    model: MODEL,
-    messages: [
-      { role: 'system', content: 'You help citizens describe their financial and employment situations clearly and respectfully.' },
-      { role: 'user', content: prompt }
-    ],
-    temperature: 0.5,
-    max_tokens: 250,
-  }, {
-    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    signal,
-    timeout: 15000,
-  });
+  try {
+    const response = await axios.post(OPENAI_URL, {
+      model: MODEL,
+      messages: [
+        { role: 'system', content: 'You help citizens describe their financial and employment situations clearly and respectfully.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.5,
+      max_tokens: 250,
+    }, {
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      signal,
+      timeout: 15000,
+    });
 
-  const content = response.data?.choices?.[0]?.message?.content?.trim();
-  return content || '';
+    const content = response.data?.choices?.[0]?.message?.content?.trim();
+    if (!content) {
+      console.warn('OpenAI API returned empty response, using mock suggestion');
+      return getMockSuggestion(prompt);
+    }
+    return content;
+  } catch (error) {
+    console.warn('OpenAI API failed, using mock suggestion:', error.message);
+    return getMockSuggestion(prompt);
+  }
 }
 
 export function buildPrompt(field: 'financialSituation' | 'employmentCircumstances' | 'reasonForApplying'): string {
@@ -43,7 +53,7 @@ export function buildPrompt(field: 'financialSituation' | 'employmentCircumstanc
   }
 }
 
-function getMockSuggestion(prompt: string): string {
+function getMockSuggestion(prompt: string): Promise<string> {
   // Simulate API delay
   return new Promise<string>((resolve) => {
     setTimeout(() => {

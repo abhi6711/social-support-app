@@ -71,10 +71,31 @@ export default function Step3({ onBack }: { onBack: () => void }) {
         <Button type="submit" variant="contained">{t('actions.submit')}</Button>
       </Box>
 
-      <Dialog open={open} onClose={() => setOpen(false)} aria-labelledby="ai-suggestion-title">
+      <Dialog 
+        open={open} 
+        onClose={() => setOpen(false)} 
+        aria-labelledby="ai-suggestion-title"
+        maxWidth="lg"
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            minWidth: '50vw',
+            maxWidth: '80vw',
+            width: 'auto',
+          }
+        }}
+      >
         <DialogTitle id="ai-suggestion-title">{t('step3.aiTitle')}</DialogTitle>
         <DialogContent>
-          <TextField fullWidth multiline minRows={6} value={suggestion} onChange={(e) => setSuggestion(e.target.value)} />
+          <TextField 
+            fullWidth 
+            multiline 
+            minRows={8} 
+            maxRows={12}
+            value={suggestion} 
+            onChange={(e) => setSuggestion(e.target.value)}
+            sx={{ mt: 1 }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>{t('actions.discard')}</Button>
